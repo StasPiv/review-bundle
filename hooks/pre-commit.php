@@ -25,22 +25,18 @@ if (!$included) {
 }
 
 use League\CLImate\CLImate;
-use StasPiv\Review\Checker\PhpCodeShifferChecker;
 use StaticReview\Issue\Issue;
 use StaticReview\Reporter\Reporter;
 use StaticReview\StaticReview;
 use StaticReview\VersionControl\GitVersionControl;
 use Symfony\Component\Process\Process;
 use StasPiv\Review\Fixer\PhpCsFixer;
-use StasPiv\Review\Checker\PhpMdChecker;
 
 $reporter = new Reporter();
 $review = new StaticReview($reporter);
 
 // Add any reviews to the StaticReview instance, supports a fluent interface.
-$review->addReview(new PhpCsFixer())
-       ->addReview(new PhpMdChecker())
-       ->addReview(new PhpCodeShifferChecker());
+$review->addReview(new PhpCsFixer());
 
 $git = new GitVersionControl();
 
