@@ -6,9 +6,9 @@
  * Time: 13:01.
  */
 
-namespace StanislavPivovartsev\ReviewBundle\Checker;
+namespace StasPiv\Checker;
 
-use StanislavPivovartsev\ReviewBundle\Service\ClimateAwareTrait;
+use StasPiv\Service\ClimateAwareTrait;
 use StaticReview\Commit\CommitMessageInterface;
 use StaticReview\File\FileInterface;
 use StaticReview\Reporter\ReporterInterface;

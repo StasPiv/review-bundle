@@ -6,7 +6,7 @@
  * Time: 13:00.
  */
 
-namespace StanislavPivovartsev\ReviewBundle\Checker;
+namespace StasPiv\Checker;
 
 interface CheckerInterface
 {

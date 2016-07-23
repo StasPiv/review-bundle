@@ -6,9 +6,9 @@
  * Time: 14:30.
  */
 
-namespace StanislavPivovartsev\ReviewBundle\Fixer;
+namespace StasPiv\Fixer;
 
-use StanislavPivovartsev\ReviewBundle\Service\ClimateAwareTrait;
+use StasPiv\Service\ClimateAwareTrait;
 use StaticReview\File\FileInterface;
 use StaticReview\Reporter\ReporterInterface;
 use StaticReview\Review\AbstractFileReview;

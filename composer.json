@@ -1,8 +1,9 @@
 {
     "name": "staspiv/review-bundle",
+    "license": "proprietary",
     "description": "Package for code review",
     "autoload": {
-        "psr-4": { "": "src/" }
+        "psr-4": { "StasPiv\\": "src/" }
     },
     "type": "library",
     "authors": [
@@ -13,6 +14,6 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "sjparkinson/static-review": "5.2.0"
+        "sjparkinson/static-review": "~5.2"
     }
 }

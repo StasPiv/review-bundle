@@ -6,7 +6,7 @@
  * Time: 13:00.
  */
 
-namespace StanislavPivovartsev\ReviewBundle\Fixer;
+namespace StasPiv\Fixer;
 
 interface FixerInterface
 {

@@ -6,7 +6,7 @@
  * Time: 15:05.
  */
 
-namespace StanislavPivovartsev\ReviewBundle\Service;
+namespace StasPiv\Service;
 
 use League\CLImate\CLImate;
 
