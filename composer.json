@@ -1,0 +1,15 @@
+{
+    "name": "staspiv/review-bundle",
+    "description": "Pakage for code review",
+    "type": "library",
+    "authors": [
+        {
+            "name": "Stanislav Pivovartsev",
+            "email": "staspivovartsev@gmail.com"
+        }
+    ],
+    "minimum-stability": "stable",
+    "require": {
+        "sjparkinson/static-review": "5.2.0"
+    }
+}
