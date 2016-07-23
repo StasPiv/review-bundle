@@ -1,6 +1,9 @@
 {
     "name": "staspiv/review-bundle",
     "description": "Pakage for code review",
+    "autoload": {
+        "psr-4": { "": "src/" },
+    },
     "type": "library",
     "authors": [
         {
