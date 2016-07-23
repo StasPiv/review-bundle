@@ -3,7 +3,7 @@
     "license": "proprietary",
     "description": "Package for code review",
     "autoload": {
-        "psr-4": { "StasPiv\\": "src/" }
+        "psr-4": { "StasPiv\\Review\\": "src/" }
     },
     "type": "library",
     "authors": [
@@ -14,6 +14,9 @@
     ],
     "minimum-stability": "stable",
     "require": {
-        "sjparkinson/static-review": "~5.2"
+        "sjparkinson/static-review": "~5.2",
+        "leaphub/phpcs-symfony2-standard": "~2.0",
+        "friendsofphp/php-cs-fixer": "~1.11",
+        "phpmd/phpmd": "~2.4"
     }
 }

@@ -3,39 +3,51 @@
  * Created by PhpStorm.
  * User: stas
  * Date: 23.07.16
- * Time: 16:25
+ * Time: 16:25.
  */
 
-namespace StasPiv\Checker;
+namespace StasPiv\Review\Checker;
 
-use StasPiv\Service\ClimateAwareTrait;
-use StaticReview\File\FileInterface;
+use StasPiv\Review\ClimateAwareTrait;
 use StaticReview\Reporter\ReporterInterface;
-use StaticReview\Review\AbstractFileReview;
+use StasPiv\Review\AbstractFileReview;
 use StaticReview\Review\ReviewableInterface;
 
+/**
+ * Class PhpMdChecker.
+ */
 class PhpMdChecker extends AbstractFileReview implements CheckerInterface
 {
     use ClimateAwareTrait;
 
-    protected function canReviewFile(FileInterface $file)
+    private $pathToPhpMdXml = __DIR__.'/../../config/phpmd.xml';
+
+    /**
+     * @param ReporterInterface   $reporter
+     * @param ReviewableInterface $subject
+     * @param string              $message
+     */
+    protected function scanMessage(ReporterInterface $reporter, ReviewableInterface $subject, string $message)
     {
-        return $file->getExtension() === 'php';
+        $this->getClimate()->yellow($message);
+        $reporter->warning($message, $this, $subject);
     }
 
-    public function review(ReporterInterface $reporter, ReviewableInterface $subject)
+    /**
+     * @param ReviewableInterface $subject
+     *
+     * @return string
+     */
+    protected function getCommandLine(ReviewableInterface $subject) : string
     {
-        $pathToPhpMd = 'vendor/bin/phpmd';
-        $pathToRules = 'app/phpmd.xml';
-        $cmd = $pathToPhpMd.' '.$subject->getName().' text '.$pathToRules;
-
-        $process = $this->getProcess($cmd);
-
-        $process->run(
-            function ($type, $message) {
-                $this->getClimate()->out($message);
-            }
-        );
+        return 'vendor/bin/phpmd'.' '.$subject->getName().' text '.$this->pathToPhpMdXml;
     }
 
+    /**
+     * @param string $pathToPhpMdXml
+     */
+    public function setPathToPhpMdXml($pathToPhpMdXml)
+    {
+        $this->pathToPhpMdXml = $pathToPhpMdXml;
+    }
 }

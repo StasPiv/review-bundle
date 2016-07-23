@@ -1,0 +1,46 @@
+<?xml version="1.0"?>
+<ruleset name="Symfony2 ruleset" xmlns="http://pmd.sf.net/ruleset/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sf.net/ruleset/1.0.0 http://pmd.sf.net/ruleset_xml_schema.xsd" xsi:noNamespaceSchemaLocation="http://pmd.sf.net/ruleset_xml_schema.xsd">
+    <description>
+        Custom ruleset.
+    </description>
+
+    <rule ref="rulesets/design.xml" />
+
+    <rule ref="rulesets/unusedcode.xml">
+        <exclude name="UnusedFormalParameter" />
+    </rule>
+
+    <rule ref="rulesets/codesize.xml">
+        <exclude name="TooManyMethods" />
+    </rule>
+
+    <rule ref="rulesets/codesize.xml/TooManyMethods">
+        <priority>1</priority>
+        <properties>
+            <property name="maxmethods" value="60" />
+        </properties>
+    </rule>
+
+    <rule ref="rulesets/naming.xml">
+        <exclude name="ShortVariable" />
+        <exclude name="LongVariable" />
+    </rule>
+
+    <!-- Import entire naming rule set and exclude rules -->
+    <rule ref="rulesets/naming.xml/ShortVariable">
+        <priority>1</priority>
+        <properties>
+            <property name="exceptions" value="id,ip" />
+        </properties>
+    </rule>
+
+    <!-- Import entire naming rule set and exclude rules -->
+    <rule ref="rulesets/naming.xml/LongVariable">
+        <priority>1</priority>
+        <properties>
+            <property name="maximum" value="30" />
+        </properties>
+    </rule>
+
+</ruleset>

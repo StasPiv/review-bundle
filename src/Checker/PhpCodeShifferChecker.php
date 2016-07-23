@@ -6,41 +6,41 @@
  * Time: 13:01.
  */
 
-namespace StasPiv\Checker;
+namespace StasPiv\Review\Checker;
 
-use StasPiv\Service\ClimateAwareTrait;
-use StaticReview\Commit\CommitMessageInterface;
-use StaticReview\File\FileInterface;
+use StasPiv\Review\AbstractFileReview;
+use StasPiv\Review\ClimateAwareTrait;
 use StaticReview\Reporter\ReporterInterface;
-use StaticReview\Review\AbstractReview;
 use StaticReview\Review\ReviewableInterface;
 
-class PhpCodeShifferChecker extends AbstractReview implements CheckerInterface
+/**
+ * Class PhpCodeShifferChecker.
+ */
+class PhpCodeShifferChecker extends AbstractFileReview implements CheckerInterface
 {
     use ClimateAwareTrait;
 
-    protected function canReviewFile(FileInterface $file)
+    /**
+     * @param ReporterInterface   $reporter
+     * @param ReviewableInterface $subject
+     * @param string              $message
+     */
+    protected function scanMessage(ReporterInterface $reporter, ReviewableInterface $subject, string $message)
     {
-        return $file->getExtension() === 'php';
+        $this->getClimate()->out($message);
+
+        if (strpos($message, 'ERROR')) {
+            $reporter->warning($message, $this, $subject);
+        }
     }
 
-    protected function canReviewMessage(CommitMessageInterface $message)
+    /**
+     * @param ReviewableInterface $subject
+     *
+     * @return string
+     */
+    protected function getCommandLine(ReviewableInterface $subject) : string
     {
-        return true;
-    }
-
-    public function review(ReporterInterface $reporter, ReviewableInterface $subject)
-    {
-        $pathToBeautifier = 'vendor/bin/phpcs';
-        $codeStandard = 'vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/';
-        $cmd = $pathToBeautifier.' --standard='.$codeStandard.' '.$subject->getName();
-
-        $process = $this->getProcess($cmd);
-
-        $process->run(
-            function ($type, $message) {
-                $this->getClimate()->out($message);
-            }
-        );
+        return 'vendor/bin/phpcs'.' --standard='.'vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/'.' '.$subject->getName();
     }
 }

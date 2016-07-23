@@ -6,7 +6,7 @@
  * Time: 15:05.
  */
 
-namespace StasPiv\Service;
+namespace StasPiv\Review;
 
 use League\CLImate\CLImate;
 

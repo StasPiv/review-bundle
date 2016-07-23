@@ -6,37 +6,42 @@
  * Time: 14:30.
  */
 
-namespace StasPiv\Fixer;
+namespace StasPiv\Review\Fixer;
 
-use StasPiv\Service\ClimateAwareTrait;
-use StaticReview\File\FileInterface;
+use StasPiv\Review\ClimateAwareTrait;
 use StaticReview\Reporter\ReporterInterface;
-use StaticReview\Review\AbstractFileReview;
+use StasPiv\Review\AbstractFileReview;
 use StaticReview\Review\ReviewableInterface;
 
+/**
+ * Class PhpCsFixer.
+ */
 class PhpCsFixer extends AbstractFileReview implements FixerInterface
 {
     use ClimateAwareTrait;
 
-    protected function canReviewFile(FileInterface $file)
+    /**
+     * @param ReporterInterface   $reporter
+     * @param ReviewableInterface $subject
+     * @param string              $message
+     */
+    protected function scanMessage(ReporterInterface $reporter, ReviewableInterface $subject, string $message)
     {
-        return $file->getExtension() === 'php';
+        if ($message == 'F') {
+            $message = 'Styling has been fixed in '.$subject->getName();
+
+            $this->getClimate()->green($message);
+            $reporter->info($message, $this, $subject);
+        }
     }
 
-    public function review(ReporterInterface $reporter, ReviewableInterface $subject)
+    /**
+     * @param ReviewableInterface $subject
+     *
+     * @return string
+     */
+    protected function getCommandLine(ReviewableInterface $subject) : string
     {
-        $cmd = 'vendor/bin/php-cs-fixer -vvv fix '.$subject->getName().' --level=symfony';
-        $process = $this->getProcess($cmd);
-
-        $process->run(
-            function ($type, $message) use ($subject, $reporter) {
-                if ($message == 'F') {
-                    $message = 'Styling has been fixed in '.$subject->getName();
-
-                    $this->getClimate()->backgroundYellow($message);
-                    $reporter->warning($message, $this, $subject);
-                }
-            }
-        );
+        return 'vendor/bin/php-cs-fixer -vvv fix '.$subject->getName().' --level=symfony';
     }
 }

@@ -6,8 +6,11 @@
  * Time: 13:00.
  */
 
-namespace StasPiv\Fixer;
+namespace StasPiv\Review\Fixer;
 
+/**
+ * Interface FixerInterface.
+ */
 interface FixerInterface
 {
 }

@@ -6,8 +6,11 @@
  * Time: 13:00.
  */
 
-namespace StasPiv\Checker;
+namespace StasPiv\Review\Checker;
 
+/**
+ * Interface CheckerInterface.
+ */
 interface CheckerInterface
 {
 }
