@@ -9,38 +9,31 @@
 namespace StasPiv\Review\Checker;
 
 use StasPiv\Review\AbstractFileReview;
-use StasPiv\Review\ClimateAwareTrait;
-use StaticReview\Reporter\ReporterInterface;
-use StaticReview\Review\ReviewableInterface;
+use StaticReview\File\FileInterface;
+use StaticReview\Issue\Issue;
 
 /**
  * Class PhpCodeShifferChecker.
  */
 class PhpCodeShifferChecker extends AbstractFileReview implements CheckerInterface
 {
-    use ClimateAwareTrait;
-
     /**
-     * @param ReporterInterface   $reporter
-     * @param ReviewableInterface $subject
-     * @param string              $message
+     * @param string $message
+     *
+     * @return int|void
      */
-    protected function scanMessage(ReporterInterface $reporter, ReviewableInterface $subject, string $message)
+    protected function scanMessage(string &$message) : int
     {
-        $this->getClimate()->out($message);
-
-        if (strpos($message, 'ERROR')) {
-            $reporter->warning($message, $this, $subject);
-        }
+        return Issue::LEVEL_WARNING;
     }
 
     /**
-     * @param ReviewableInterface $subject
+     * @param FileInterface $subject
      *
      * @return string
      */
-    protected function getCommandLine(ReviewableInterface $subject) : string
+    protected function getCommandLine(FileInterface $subject) : string
     {
-        return 'vendor/bin/phpcs'.' --standard='.'vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/'.' '.$subject->getName();
+        return 'vendor/bin/phpcs --standard=vendor/leaphub/phpcs-symfony2-standard/leaphub/phpcs/Symfony2/'.' '.$subject->getName();
     }
 }

@@ -8,39 +8,37 @@
 
 namespace StasPiv\Review\Fixer;
 
-use StasPiv\Review\ClimateAwareTrait;
-use StaticReview\Reporter\ReporterInterface;
+use StaticReview\File\FileInterface;
+use StaticReview\Issue\Issue;
 use StasPiv\Review\AbstractFileReview;
-use StaticReview\Review\ReviewableInterface;
 
 /**
  * Class PhpCsFixer.
  */
 class PhpCsFixer extends AbstractFileReview implements FixerInterface
 {
-    use ClimateAwareTrait;
-
     /**
-     * @param ReporterInterface   $reporter
-     * @param ReviewableInterface $subject
-     * @param string              $message
+     * @param string $message
+     *
+     * @return int
      */
-    protected function scanMessage(ReporterInterface $reporter, ReviewableInterface $subject, string $message)
+    protected function scanMessage(string &$message) : int
     {
-        if ($message == 'F') {
-            $message = 'Styling has been fixed in '.$subject->getName();
-
-            $this->getClimate()->green($message);
-            $reporter->info($message, $this, $subject);
+        if ($message !== 'F') {
+            return Issue::LEVEL_ALL;
         }
+
+        $message = 'Styling fixed';
+
+        return Issue::LEVEL_INFO;
     }
 
     /**
-     * @param ReviewableInterface $subject
+     * @param FileInterface $subject
      *
      * @return string
      */
-    protected function getCommandLine(ReviewableInterface $subject) : string
+    protected function getCommandLine(FileInterface $subject) : string
     {
         return 'vendor/bin/php-cs-fixer -vvv fix '.$subject->getName().' --level=symfony';
     }

@@ -10,6 +10,7 @@ namespace StasPiv\Review;
 
 use StaticReview\Commit\CommitMessageInterface;
 use StaticReview\File\FileInterface;
+use StaticReview\Issue\Issue;
 use StaticReview\Reporter\ReporterInterface;
 use StaticReview\Review\AbstractFileReview as BaseFileReview;
 use StaticReview\Review\ReviewableInterface;
@@ -19,19 +20,21 @@ use StaticReview\Review\ReviewableInterface;
  */
 abstract class AbstractFileReview extends BaseFileReview
 {
-    /**
-     * @param ReporterInterface   $reporter
-     * @param ReviewableInterface $subject
-     * @param string              $message
-     */
-    abstract protected function scanMessage(ReporterInterface $reporter, ReviewableInterface $subject, string $message);
+    use ClimateAwareTrait;
 
     /**
-     * @param ReviewableInterface $subject
+     * @param string $message
+     *
+     * @return int Issue level
+     */
+    abstract protected function scanMessage(string &$message) : int;
+
+    /**
+     * @param FileInterface $subject
      *
      * @return string
      */
-    abstract protected function getCommandLine(ReviewableInterface $subject) : string;
+    abstract protected function getCommandLine(FileInterface $subject) : string;
 
     /**
      * @param ReporterInterface   $reporter
@@ -39,18 +42,9 @@ abstract class AbstractFileReview extends BaseFileReview
      */
     public function review(ReporterInterface $reporter, ReviewableInterface $subject)
     {
-        $process = $this->getProcess($this->getCommandLine($subject));
-
-        $process->run(
-            function ($type, $message) use ($reporter, $subject) {
-                if ($type) {
-                }
-                if (empty(trim($message))) {
-                    return;
-                }
-                $this->scanMessage($reporter, $subject, $message);
-            }
-        );
+        if ($subject instanceof FileInterface) {
+            $this->reviewFile($reporter, $subject);
+        }
     }
 
     /**
@@ -60,7 +54,7 @@ abstract class AbstractFileReview extends BaseFileReview
      */
     protected function canReviewFile(FileInterface $file)
     {
-        return $file->getExtension() === 'php';
+        return file_exists($file->getName()) && $file->getExtension() === 'php';
     }
 
     /**
@@ -71,5 +65,39 @@ abstract class AbstractFileReview extends BaseFileReview
     protected function canReviewMessage(CommitMessageInterface $message)
     {
         return true;
+    }
+
+    /**
+     * @param ReporterInterface $reporter
+     * @param FileInterface     $subject
+     */
+    private function reviewFile(ReporterInterface $reporter, FileInterface $subject)
+    {
+        $process = $this->getProcess($this->getCommandLine($subject));
+
+        $process->run(
+            function ($type, $message) use ($reporter, $subject) {
+                if ($type) {
+                }
+                if (empty(trim($message))) {
+                    return;
+                }
+                $result = $this->scanMessage($message);
+
+                $message = $subject->getName().': '.$message;
+                switch ($result) {
+                    case Issue::LEVEL_ERROR:
+                        $reporter->error($message, $this, $subject);
+                        break;
+                    case Issue::LEVEL_WARNING:
+                        $reporter->warning($message, $this, $subject);
+                        break;
+                    case Issue::LEVEL_INFO:
+                        $reporter->info($message, $this, $subject);
+                        break;
+
+                }
+            }
+        );
     }
 }
