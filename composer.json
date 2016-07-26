@@ -1,6 +1,6 @@
 {
     "name": "staspiv/review-bundle",
-    "license": "proprietary",
+    "license": "MIT",
     "description": "Package for code review",
     "autoload": {
         "psr-4": { "StasPiv\\Review\\": "src/" }
